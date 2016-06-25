@@ -1,0 +1,13 @@
+---
+network::bond_static:
+  bond0:
+    ensure: up
+    ipaddress: 10.0.0.10
+    netmask: 255.255.255.0
+    gateway: 10.0.0.254
+    bonding_opts: 'mode=active-backup miimon=100'
+network::bond_slave:
+  eth0:
+    macaddress: 'XXXXXXXXXXXX'
+    ethtool_opts: 'autoneg off speed 1000 duplex full'
+    master: bond0

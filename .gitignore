@@ -1,0 +1,7 @@
+.bin/
+.gems/
+Gemfile.lock
+.vagrant/
+pkg/
+.bundle/
+vendor/
