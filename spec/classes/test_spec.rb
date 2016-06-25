@@ -25,3 +25,30 @@ describe 'test' do
     )
   }
 end
+
+describe 'YAML hieradata' do
+
+  validator = HieraData::YamlValidator.new('spec/fixtures/hieradata')
+  validator.load_data :ignore_empty
+
+  validator.validate('network::bond_static') { |v|
+    it {
+      expect(v).to be_a Hash
+    }
+
+    ['netmask', 'ipaddress', 'gateway'].each do |k|
+      it {
+        expect(v['bond0'][k]).to match /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/
+      }
+    end
+  }
+
+  validator.validate('network::bond_slave') { |v|
+    it {
+      expect(v).to be_a Hash
+    }
+    it {
+      expect(v['eth0']['macaddress']).to eq 'XXXXXXXXXXXX'
+    }
+  }
+end
