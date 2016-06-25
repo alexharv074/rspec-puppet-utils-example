@@ -1,6 +1,12 @@
 require 'spec_helper'
 
 describe 'test' do
+  before(:each) {
+    MockFunction.new('is_mac_address') { |f|
+      f.stubs(:call).with(['XXXXXXXXXXXX']).returns(true)
+    }
+  }
+
   it {
     is_expected.to contain_network__bond__static('bond0').with(
       'ensure'       => 'up',
