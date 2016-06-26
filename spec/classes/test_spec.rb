@@ -52,3 +52,38 @@ describe 'YAML hieradata' do
     }
   }
 end
+
+describe 'ifcfg-eth.erb' do
+
+  let(:scope) { PuppetlabsSpec::PuppetInternals.scope }
+
+  it do
+    harness = TemplateHarness.new('spec/fixtures/modules/network/templates/ifcfg-eth.erb', scope)
+    harness.set('@interface', 'bond0')
+    harness.set('@ipaddress', '10.0.0.10')
+    harness.set('@netmask', '255.255.255.0')
+    harness.set('@gateway', '10.0.0.254')
+    harness.set('@bonding_opts', 'mode=active-backup miimon=100')
+    harness.set('@bootproto', 'none')
+    harness.set('@onboot', 'yes')
+    harness.set('@hotplug', 'no')
+    harness.set('@scope', false)
+
+    result = harness.run
+    expect(result).to eq '###
+### File managed by Puppet
+###
+DEVICE=bond0
+BOOTPROTO=none
+ONBOOT=yes
+HOTPLUG=yes
+TYPE=Ethernet
+IPADDR=10.0.0.10
+NETMASK=255.255.255.0
+GATEWAY=10.0.0.254
+BONDING_OPTS="mode=active-backup miimon=100"
+PEERDNS=no
+NM_CONTROLLED=no
+'
+  end
+end
